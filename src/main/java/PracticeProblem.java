@@ -1,27 +1,62 @@
+import java.util.*;
+
 public class PracticeProblem {
 
-	public static void main(String args[]) {
+    public static int searchMazeMoves(String[][] maze) {
+        int rows = maze.length;
+        int cols = maze[0].length;
+        int startRow = rows - 1;
+        int startCol = -1;
 
-	}
+        // Find 'S' in the bottom row
+        for (int col = 0; col < cols; col++) {
+            if (maze[startRow][col].equals("S")) {
+                startCol = col;
+                break;
+            }
+        }
 
-	public static void q1() {
-		//Write question 1 code here
-	}
+        if (startCol == -1) return -1; // No start found
 
-	public static void q2() {
-		//Write question 2 code here
-	}
+        boolean[][] visited = new boolean[rows][cols];
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{startRow, startCol, 0});
+        visited[startRow][startCol] = true;
 
-	public static void q3() {
-		//Write question 3 code here
-	}
+        int[][] directions = {
+            {-1, 0}, // up
+            {1, 0},  // down
+            {0, -1}, // left
+            {0, 1}   // right
+        };
 
-	public static void q4() {
-		//Write question 4 code here
-	}
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int r = current[0], c = current[1], dist = current[2];
 
-	public static void q5() {
-		//Write question 5 code here
-	}
+            if (maze[r][c].equals("F")) return dist;
 
+            for (int[] dir : directions) {
+                int newR = r + dir[0];
+                int newC = c + dir[1];
+
+                if (inBounds(newR, newC, rows, cols) &&
+                    !visited[newR][newC] &&
+                    !maze[newR][newC].equals("*")) {
+                    visited[newR][newC] = true;
+                    queue.add(new int[]{newR, newC, dist + 1});
+                }
+            }
+        }
+
+        return -1; //no freaking path xD - ya boy stylewithrj
+    }
+
+    private static boolean inBounds(int r, int c, int rows, int cols) {
+        return r >= 0 && r < rows && c >= 0 && c < cols;
+    }
+
+    public static void main(String[] args) {
+        // Optional testing
+    }
 }
